@@ -10,17 +10,19 @@ from wordcloud import WordCloud
 import jieba
 import jieba.posseg as psg
 import numpy
-from PIL import Image
+from PIL import Image,ImageDraw,ImageFont
 import os
+from Paths import COMMENTS_DIR,CONFIGER_PATH
 
 class MovieCloudWord(object):
-    '''通过评论的txt文档来分词，然后做成词云图'''
-    def __init__(self,movie_id,pic=None):
+    '''通过200条热评评论的txt文档来分词，然后做成词云图'''
+    def __init__(self,movie_name,movie_id,pic=None):
         self.movie_id=movie_id
-        self.text_path='douban_comments/{}/{}.txt'.format(self.movie_id,self.movie_id)
-        self.stopword_file='config/stopwords.txt'
-        self.user_dict='config/{}/user_dict.txt'.format(self.movie_id)
-        self.cloud_word_path = 'douban_comments/{}/{}.png'.format(self.movie_id, self.movie_id)
+        self.moive_comment_path = os.path.join(COMMENTS_DIR, movie_name[:6] + movie_id)
+        self.text_path=os.path.join(self.moive_comment_path,f'{movie_id}.txt')
+        self.stopword_file=os.path.join(CONFIGER_PATH,'stopwords.txt')
+        self.user_dict=os.path.join(CONFIGER_PATH,'user_dict.txt')
+        self.cloud_word_path = os.path.join(self.moive_comment_path,f'{movie_id}.png')
         self.stop_words = {}
         self.word_dict = {}
         self.picture_path = pic
@@ -54,9 +56,9 @@ class MovieCloudWord(object):
             _user_dic = self.file_exists(self.user_dict)
             if _user_dic:
                 jieba.load_userdict(_user_dic)
-            filter_key = ('a', 'n', 'e', 'o')
+            filter_key = ('a', 'v','e', 'o')
             seg = [x.word for x in psg.cut(get_text) if x.flag.startswith(filter_key)]
-            c = Counter([x for x in seg if len(x) > 1 and not x.isdigit()]).most_common(100)
+            c = Counter([x for x in seg if len(x) > 1 and not x.isdigit()]).most_common(200)
             for k, v in c:
                 if k in stopwords_get:
                     pass
@@ -83,9 +85,22 @@ class MovieCloudWord(object):
                            )
         _wc.generate_from_frequencies(self.get_word_frequence)
         _wc.to_file(self.cloud_word_path)
+    def write_shuiyin(self,movie_name,mv_score):
+        font = ImageFont.truetype(self.font, 18)
+        with Image.open(self.cloud_word_path) as im:
+            draw = ImageDraw.Draw(im)
+            draw.text(
+                (0, 0),
+                '《{}》\n热评推荐: {:.2f}☆'.format(movie_name.split('、')[1],float(mv_score)),
+                (255, 0, 0),
+                font=font
+            )
+            im.save(self.cloud_word_path)
 
 if __name__=='__main__':
-    moive = '27073234'
+    movie_name='ss'
+    moive = '27102739'
     pic_mask= 'imgs/bg.jpg'
-    a = MovieCloudWord(moive, pic=pic_mask)
+    a = MovieCloudWord(movie_name,moive, pic=pic_mask)
     a.generate_wc()
+    a.write_shuiyin('重视','1.53')
