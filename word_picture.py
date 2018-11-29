@@ -86,7 +86,7 @@ class MovieCloudWord(object):
         _wc.generate_from_frequencies(self.get_word_frequence)
         _wc.to_file(self.cloud_word_path)
     def write_shuiyin(self,movie_name,mv_score):
-        font = ImageFont.truetype(self.font, 18)
+        font = ImageFont.truetype(self.font, 19)
         with Image.open(self.cloud_word_path) as im:
             draw = ImageDraw.Draw(im)
             draw.text(
@@ -98,9 +98,9 @@ class MovieCloudWord(object):
             im.save(self.cloud_word_path)
 
 if __name__=='__main__':
-    movie_name='ss'
+    movie_name='6、中国蓝盔'
     moive = '27102739'
     pic_mask= 'imgs/bg.jpg'
     a = MovieCloudWord(movie_name,moive, pic=pic_mask)
     a.generate_wc()
-    a.write_shuiyin('重视','1.53')
+    a.write_shuiyin(movie_name,'1.53')
