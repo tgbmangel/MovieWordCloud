@@ -56,9 +56,9 @@ class MovieCloudWord(object):
             _user_dic = self.file_exists(self.user_dict)
             if _user_dic:
                 jieba.load_userdict(_user_dic)
-            filter_key = ('a', 'v','e', 'o')
+            filter_key = ('a', 'v','e', 'o','n')
             seg = [x.word for x in psg.cut(get_text) if x.flag.startswith(filter_key)]
-            c = Counter([x for x in seg if len(x) > 1 and not x.isdigit()]).most_common(200)
+            c = Counter([x for x in seg if len(x) > 1 and not x.isdigit()]).most_common(100)
             for k, v in c:
                 if k in stopwords_get:
                     pass
@@ -86,21 +86,25 @@ class MovieCloudWord(object):
         _wc.generate_from_frequencies(self.get_word_frequence)
         _wc.to_file(self.cloud_word_path)
     def write_shuiyin(self,movie_name,mv_score):
-        font = ImageFont.truetype(self.font, 19)
+        font_size=20
+        font = ImageFont.truetype(self.font, font_size)
+        score='{:.1f}'.format(float(mv_score))
+        n,f,*_=score.split('.')
+        Stars='★'*int(n)+('☆' if not f=='0' else '')
         with Image.open(self.cloud_word_path) as im:
             draw = ImageDraw.Draw(im)
             draw.text(
                 (0, 0),
-                '《{}》\n热评推荐: {:.1f}☆'.format(movie_name.split('、')[1],float(mv_score)),
+                '《{}》\n{}\n推荐:{:.1f}星'.format(movie_name.split('、')[1],Stars,float(score)),
+                # '《{}》\n热评推荐:{}'.format(movie_name.split('、')[1],Stars),
                 (255, 0, 0),
                 font=font
             )
             im.save(self.cloud_word_path)
 
 if __name__=='__main__':
-    movie_name='6、中国蓝盔'
-    moive = '27102739'
+    movie_name,moive_id,score='21、正正的世界','30367751','4.4'
     pic_mask= 'imgs/bg.jpg'
-    a = MovieCloudWord(movie_name,moive, pic=pic_mask)
+    a = MovieCloudWord(movie_name, moive_id, pic=pic_mask)
     a.generate_wc()
-    a.write_shuiyin(movie_name,'1.53')
+    a.write_shuiyin(movie_name,score)
