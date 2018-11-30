@@ -26,7 +26,8 @@ class MovieCloudWord(object):
         self.stop_words = {}
         self.word_dict = {}
         self.picture_path = pic
-        self.font = r'C:\Windows\Fonts\FZSTK.TTF'
+        self.font = os.path.join(CONFIGER_PATH,'HYShangWeiShouShuW.ttf')
+        # self.font = r'C:\Windows\Fonts\FZSTK.TTF'
     @property
     def get_stopwords(self):
         '''
@@ -103,7 +104,7 @@ class MovieCloudWord(object):
             im.save(self.cloud_word_path)
 
 if __name__=='__main__':
-    movie_name,moive_id,score='21、正正的世界','30367751','4.4'
+    movie_name,moive_id,score='8、冒牌搭档','30329714','1.0'
     pic_mask= 'imgs/bg.jpg'
     a = MovieCloudWord(movie_name, moive_id, pic=pic_mask)
     a.generate_wc()
