@@ -16,7 +16,10 @@ if __name__=="__main__":
         mv = DoubanMovieComments(movie_name,moive_id)
         mv.get_comments()
         mv.tear_down()
-        mv_score=mv.STARS/mv.STAR_MAN
+        if mv.STAR_MAN:
+            mv_score=mv.STARS/mv.STAR_MAN
+        else:
+            mv_score=0.0
         a = MovieCloudWord(movie_name,moive_id,pic=pic_mask)
         a.generate_wc()
         a.write_shuiyin(movie_name,mv_score)

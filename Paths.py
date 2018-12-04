@@ -8,8 +8,11 @@ import time
 import os
 
 base_path=os.path.dirname(__file__)
-print(base_path)
+
 COMMENTS_DIR=os.path.join(base_path,'douban',time.strftime('%Y%m%d',time.localtime()))
-print(COMMENTS_DIR)
+
 CONFIGER_PATH=os.path.join(base_path,'config')
 
+MOVIE_WEEK_PATH=os.path.join(base_path, 'movieweek')
+if not os.path.exists(MOVIE_WEEK_PATH):
+    os.makedirs(MOVIE_WEEK_PATH)

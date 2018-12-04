@@ -84,24 +84,32 @@ class MovieCloudWord(object):
                            width=1000,
                            height=800,
                            )
-        _wc.generate_from_frequencies(self.get_word_frequence)
-        _wc.to_file(self.cloud_word_path)
+        if self.get_word_frequence:
+            _wc.generate_from_frequencies(self.get_word_frequence)
+            _wc.to_file(self.cloud_word_path)
+        else:
+            print('没有云词，不生成图片')
+            pass
+
     def write_shuiyin(self,movie_name,mv_score):
         font_size=20
         font = ImageFont.truetype(self.font, font_size)
         score='{:.1f}'.format(float(mv_score))
         n,f,*_=score.split('.')
         Stars='★'*int(n)+('☆' if not f=='0' else '')
-        with Image.open(self.cloud_word_path) as im:
-            draw = ImageDraw.Draw(im)
-            draw.text(
-                (0, 0),
-                '《{}》\n{}\n推荐:{:.1f}星'.format(movie_name.split('、')[1],Stars,float(score)),
-                # '《{}》\n热评推荐:{}'.format(movie_name.split('、')[1],Stars),
-                (255, 0, 0),
-                font=font
-            )
-            im.save(self.cloud_word_path)
+        try:
+            with Image.open(self.cloud_word_path) as im:
+                draw = ImageDraw.Draw(im)
+                draw.text(
+                    (0, 0),
+                    '《{}》\n{}\n推荐:{:.1f}星'.format(movie_name.split('、')[1],Stars,float(score)),
+                    # '《{}》\n热评推荐:{}'.format(movie_name.split('、')[1],Stars),
+                    (255, 0, 0),
+                    font=font
+                )
+                im.save(self.cloud_word_path)
+        except FileNotFoundError:
+            print('没有此图文件')
 
 if __name__=='__main__':
     movie_name,moive_id,score='8、冒牌搭档','30329714','1.0'
