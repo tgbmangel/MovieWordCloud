@@ -102,7 +102,7 @@ class MovieCloudWord(object):
                 draw = ImageDraw.Draw(im)
                 draw.text(
                     (0, 0),
-                    '《{}》\n{}\n推荐:{:.1f}星'.format(movie_name.split('、')[1],Stars,float(score)),
+                    '《{}》\n{}\n推荐:{:.1f}/5星'.format(movie_name.split('、')[1],Stars,float(score)),
                     # '《{}》\n热评推荐:{}'.format(movie_name.split('、')[1],Stars),
                     (255, 0, 0),
                     font=font

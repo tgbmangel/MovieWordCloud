@@ -6,3 +6,8 @@
 pycharm
 ===
     pycharm markdown 插件出问题了。看不出效果咋整
+
+运行
+===
+    每周电影评论:main.py
+    每周电影排行：realtime_piaofang.py

@@ -25,6 +25,7 @@ if t_start.isocalendar()[2]==1:
             pass
         else:
             week_url=week_url.format(t_start.year,t_start.month,t_start.day)
+            print(week_url)
             resp=requests.get(week_url)
             print(resp.status_code)
             data1=resp.json().get('data1')
